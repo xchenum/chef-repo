@@ -15,7 +15,7 @@ template node['hadoop']['conf.mapred.site'] do
   owner node['hadoop']['user']
   group node['hadoop']['group']
 
-  variables (
+  variables(
     :master => master
   )
 end

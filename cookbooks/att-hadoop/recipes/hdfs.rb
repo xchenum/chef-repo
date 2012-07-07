@@ -5,6 +5,7 @@ directory node['hadoop']['tmp.dir'] do
   group "hadoop"
   mode "750"
   action :create
+  recursive true
 end
 
 def get_comp_ip(comp)
@@ -23,9 +24,9 @@ template node['hadoop']['conf.core.site'] do
   owner node['hadoop']['user']
   group node['hadoop']['group']
 
-  variables (
-    :tmp_dir => node['hadoop']['tmp.dir'],
-    :name_node => master
+  variables(
+    :tmp_dir    => node['hadoop']['tmp.dir'],
+    :name_node  => master
   )
 end
 
@@ -35,7 +36,7 @@ template node['hadoop']['conf.hdfs.site'] do
   owner node['hadoop']['user']
   group node['hadoop']['group']
 
-  variables (
+  variables(
     :replication => node['hadoop']['replication']
   )
 end
