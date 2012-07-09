@@ -5,4 +5,8 @@ default['hadoop']['conf.mapred.site'] = ::File.join ::File::SEPARATOR, "usr", "l
 default['hadoop']['user'] = "hduser"
 default['hadoop']['group'] = "hadoop"
 default['hadoop']['replication'] = 2
+default['hadoop']['useram'] = true
+default['hadoop']['ramdisk'] = ::File.join ::File::SEPARATOR, "ramdisk"
+default['hadoop']['masters'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf", "masters"
+default['hadoop']['slaves'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf", "slaves"
 
