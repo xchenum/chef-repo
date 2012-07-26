@@ -10,14 +10,15 @@ end
 def count_cpu(comp)
   res = 0
   nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
-  nodes.each do |node|
-    res = res + node['cpu']['total']
+  nodes.each do |n|
+    res = res + n['cpu']['total']
   end
+  res = res + node['cpu']['total']
   return res
 end
 
 master = get_comp_ip("hd-master")
-map_tasks = search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").length * 10
+map_tasks = (search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").length + 1) * 10
 reduce_tasks = count_cpu("hd-slave") * 2
 
 template node['hadoop']['conf.mapred.site'] do
