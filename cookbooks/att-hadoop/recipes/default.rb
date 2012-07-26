@@ -12,8 +12,13 @@ include_recipe "att-hadoop::hdfs"
 include_recipe "att-hadoop::mapred"
 
 if node['roles'].include?("hd-master")
-  nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave")
-  nodes.push(node) 
+  ips = []
+  search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
+    ips.push( n["network"]["ipaddress_eth0"] || n["network"]["ipaddress_eth1"] )
+  end
+
+  lip = node["network"]["ipaddress_eth0"] # || node["network"]["ipaddress_eth1"]
+  ips.push(lip)
 
   template node['hadoop']['masters'] do
     source "hosts.erb"
@@ -22,7 +27,7 @@ if node['roles'].include?("hd-master")
     group node['hadoop']['group']
 
     variables(
-      :hosts => [ node ]
+      :hosts => [ lip ]
     )
   end
 
@@ -33,7 +38,7 @@ if node['roles'].include?("hd-master")
     group node['hadoop']['group']
 
     variables(
-      :hosts => nodes
+      :hosts => ips
     )
   end
 
