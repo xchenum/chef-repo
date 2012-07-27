@@ -9,4 +9,6 @@ default['hadoop']['useram'] = false
 default['hadoop']['ramdisk'] = ::File.join ::File::SEPARATOR, "ramdisk"
 default['hadoop']['masters'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf", "masters"
 default['hadoop']['slaves'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf", "slaves"
+default['hadoop']['compression'] = false
+default['hadoop']['cluster_size'] = 96
 

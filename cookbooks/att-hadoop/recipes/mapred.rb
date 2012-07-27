@@ -19,7 +19,7 @@ end
 
 master = get_comp_ip("hd-master")
 map_tasks = (search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").length + 1) * 10
-reduce_tasks = count_cpu("hd-slave") * 2
+reduce_tasks = (count_cpu("hd-slave") * 1.2).to_i
 
 template node['hadoop']['conf.mapred.site'] do
   source 'mapred-site.xml.erb'
@@ -32,7 +32,8 @@ template node['hadoop']['conf.mapred.site'] do
     :map_tasks => map_tasks,
     :reduce_tasks => reduce_tasks,
     :map_per_node => node['cpu']['total'] * 2,
-    :reduce_per_node => node['cpu']['total'] / 2
+    :reduce_per_node => node['cpu']['total'] / 2 + 1,
+    :compression => node['hadoop']['compression']
   )
 end
 
