@@ -8,5 +8,5 @@ cron "chef-client" do
   user "root"
   shell "/bin/bash"
 
-  command "/bin/sleep `/usr/bin/expr $RANDOM \\% 90`; #{client} > #{output} 2>&1"
+  command "/bin/sleep `/usr/bin/expr $RANDOM \\% 600`; #{client} > #{output} 2>&1"
 end

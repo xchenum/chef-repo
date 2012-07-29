@@ -1,4 +1,8 @@
 
+package "liblzo2-dev " do
+  action :upgrade
+end
+
 def get_comp_ip(comp)
   nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
   if (nodes.length != 0)
