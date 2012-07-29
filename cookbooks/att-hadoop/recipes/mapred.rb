@@ -1,4 +1,8 @@
 
+package "liblzo2-dev " do
+  action :upgrade
+end
+
 def get_comp_ip(comp)
   nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
   if (nodes.length != 0)
@@ -32,7 +36,7 @@ template node['hadoop']['conf.mapred.site'] do
     :map_tasks => map_tasks,
     :reduce_tasks => reduce_tasks,
     :map_per_node => node['cpu']['total'] * 2,
-    :reduce_per_node => node['cpu']['total'] / 2
+    :reduce_per_node => node['cpu']['total'] 
   )
 end
 
