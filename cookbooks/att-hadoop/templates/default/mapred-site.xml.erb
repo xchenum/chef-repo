@@ -25,6 +25,15 @@
     and reduce task.
     </description>
   </property>
+<% if @compression then%>
+  <property>
+    <name>io.compression.codecs</name>
+    <value>com.hadoop.compression.lzo.LzoCodec,com.hadoop.compression.lzo.LzopCodec</value>
+  </property>
+  <property>
+    <name>io.compression.codec.lzo.class</name>
+    <value>com.hadoop.compression.lzo.LzoCodec</value>
+  </property>
   <property>
     <name>mapred.compress.map.output</name>
     <value>true</value>
@@ -35,6 +44,7 @@
     <name>mapred.map.output.compression.codec</name>
     <value>com.hadoop.compression.lzo.LzoCodec</value>
   </property>
+<% end %>
   <property>
     <name>mapred.tasktracker.map.tasks.maximum</name>
     <value><%= @map_per_node %></value>
@@ -50,5 +60,25 @@
   <property>
     <name>mapred.job.tracker.handler.count</name>
     <value>60</value>
+  </property>
+  <property>
+    <name>mapred.job.reuse.jvm.num.tasks</name>
+    <value>10</value>
+  </property>
+  <property>
+    <name>mapred.reduce.tasksperslot</name>
+    <value>1.75</value>
+  </property>
+  <property>
+    <name>mapred.child.java.opts</name>
+    <value>-Xmx2048m</value>
+  </property>
+  <property>
+    <name>io.sort.factor</name>
+    <value>48</value>
+  </property>
+  <property>
+    <name>io.sort.mb</name>
+    <value>200</value>
   </property>
 </configuration>

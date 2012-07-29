@@ -16,6 +16,14 @@ if node['roles'].include?("hd-master")
   search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
     ips.push( n["network"]["ipaddress_eth0"] || n["network"]["ipaddress_eth1"] )
   end
+  ips = ips.sort()
+  
+  if node['hadoop']['cluster_size'] then
+      # limit the size of the cluster
+    if ips.length >= node['hadoop']['cluster_size']-1 then
+      ips = ips[0 ... node['hadoop']['cluster_size']-1]
+    end
+  end
 
   lip = node["network"]["ipaddress_eth0"] # || node["network"]["ipaddress_eth1"]
   ips.push(lip)
@@ -42,6 +50,12 @@ if node['roles'].include?("hd-master")
     )
   end
 
+  template "/home/" + node['hadoop']['user'] + "/.ssh/config" do
+    source "ssh_config.erb"
+    mode "700"
+    user node['hadoop']['user']
+    group node['hadoop']['group']
+  end
 end
 
 directory node['hadoop']['ramdisk'] do
@@ -62,3 +76,5 @@ mount node['hadoop']['ramdisk'] do
     action [:umount]
   end
 end
+
+

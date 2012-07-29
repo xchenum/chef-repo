@@ -1,2 +1,4 @@
 .rake_test_cache
 .chef
+cookbooks/zk-server
+cookbooks/chef-client-cron
