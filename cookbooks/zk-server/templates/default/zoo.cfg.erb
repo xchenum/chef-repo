@@ -19,9 +19,10 @@ clientPort=2181
 # specify all zookeeper servers
 # The fist port is used by followers to connect to the leader
 # The second one is used for leader election
-
+<% id = 1 %>
 <% @servers.each do |server| %>
-server.<%= server.id %>=<%= server.ip%>:2888:3888
+server.<%= id %>=<%= server['ipaddress_eth0'] %>:2888:3888
+<% id = id + 1 %>
 <% end %>
 
 # To avoid seeks ZooKeeper allocates space in the transaction log file in

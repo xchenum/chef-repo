@@ -20,8 +20,8 @@ end
 servers = search("node", "role:#{zk-server}") || []
 
 def gen_myid(servers):
-  for i in 1..servers.length
-    if servers[i-1] == node["hostname"]:
+  (1..servers.length).each do |i|
+    if servers[i-1]['hostname'] == node["hostname"]:
       return i
     end
   end
