@@ -21,7 +21,7 @@ clientPort=2181
 # The second one is used for leader election
 <% id = 1 %>
 <% @servers.each do |server| %>
-server.<%= id %>=<%= server['ipaddress_eth0'] %>:2888:3888
+server.<%= id %>=<%= server['network']['ipaddress_eth0'] %>:2888:3888
 <% id = id + 1 %>
 <% end %>
 

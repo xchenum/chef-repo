@@ -1,12 +1,20 @@
 
-package "liblzo2-dev " do
-  action :upgrade
-end
+
+# if node["platform"] == "centos" then
+#   package "lzo-devel" do
+#     action :upgrade
+#   end
+# else
+#   package "liblzo2-dev " do
+#     action :upgrade
+#   end
+# end
 
 def get_comp_ip(comp)
   nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
-  if (nodes.length != 0)
-    return nodes[0]["network"]["interfaces"]["eth0"]["addresses"].select { |address, data| data["family"] == "inet" }[0][0]
+  if (nodes.length != 0) then
+    # return nodes[0]["network"]["interfaces"]["eth0"]["addresses"].select { |address, data| data["family"] == "inet" }[0][0]
+    return nodes[0]["network"]["ipaddress_eth0"] || nodes[0]["network"]["ipaddress_eth1"]
   end
   return "127.0.0.1"
 end

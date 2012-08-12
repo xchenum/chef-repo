@@ -11,10 +11,14 @@
 include_recipe "att-hadoop::hdfs"
 include_recipe "att-hadoop::mapred"
 
-if node['roles'].include?("hd-master")
+if node.chef_environment.include?("caas") then
+  include_recipe "hosts"
+end
+
+if node['roles'].include?("hd-master") then
   ips = []
   search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
-    ips.push( n["network"]["ipaddress_eth0"] || n["network"]["ipaddress_eth1"] )
+    ips.push( n["network"]["ipaddress_eth0"] || n["network"]["ipaddress_eth1"] || n['network']['ipaddress_eth2'])
   end
   ips = ips.sort()
   
@@ -25,8 +29,15 @@ if node['roles'].include?("hd-master")
     end
   end
 
-  lip = node["network"]["ipaddress_eth0"] # || node["network"]["ipaddress_eth1"]
-  ips.push(lip)
+  secondary = []
+  search(:node, "chef_environment:#{node.chef_environment} AND role:hd-secondary").each() do |n|
+    secondary.push( n["network"]["ipaddress_eth0"] ) 
+  end
+
+  if secondary.length == 0 then
+    secondary.push( node["network"]["ipaddress_eth0"] || node["network"]["ipaddress_eth1"] )
+  end
+
 
   template node['hadoop']['masters'] do
     source "hosts.erb"
@@ -35,7 +46,7 @@ if node['roles'].include?("hd-master")
     group node['hadoop']['group']
 
     variables(
-      :hosts => [ lip ]
+      :hosts => secondary
     )
   end
 
@@ -55,6 +66,19 @@ if node['roles'].include?("hd-master")
     mode "700"
     user node['hadoop']['user']
     group node['hadoop']['group']
+  end
+end
+
+if node['roles'].include?("hd-secondary") then
+  template node['hadoop']['conf.hadoop.site'] do
+    source "hadoop-site.xml.erb"
+    mode "644"
+    user node['hadoop']['user']
+    group node['hadoop']['group']
+
+    variables(
+      :namenode_addr => search(:node, "chef_environment:#{node.chef_environment} AND role:hd-master")[0]['network']['ipaddress_eth0']
+    )
   end
 end
 
