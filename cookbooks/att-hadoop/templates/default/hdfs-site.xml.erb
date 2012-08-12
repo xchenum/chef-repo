@@ -9,4 +9,22 @@
     The default is used if replication is not specified in create time.
     </description>
   </property>
+<% if @secondary_http_address then %>
+  <property>
+    <name>dfs.secondary.http.address</name>
+    <value><%= @secondary_http_address %></value>
+    <description>Default block replication.
+    The actual number of replications can be specified when the file is created.
+    The default is used if replication is not specified in create time.
+    </description>
+  </property>
+<% end %>
+  <property>
+    <name>dfs.datanode.max.xcievers</name>
+    <value>4096</value>
+  </property>
+  <property>
+    <name>dfs.namenode.handler.count</name>
+    <value>40</value>
+  </property>
 </configuration>
