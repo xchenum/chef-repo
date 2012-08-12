@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-if node['platform'] == "ubuntu" then
+if node['platform'] == "ubuntu" or node['platform'] == "centos" then
   
   template "/etc/security/limits.conf" do
     source "limits.conf.erb"
