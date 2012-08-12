@@ -37,6 +37,16 @@ template node['hadoop']['conf.core.site'] do
   )
 end
 
+secondary = []
+search(:node, "chef_environment:#{node.chef_environment} AND role:hd-secondary").each() do |n|
+  secondary.push( n["network"]["ipaddress_eth0"] )
+end
+
+secondary_http = nil
+if secondary[0] then
+  secondary_http = secondary[0] + ":50090"
+end  
+
 template node['hadoop']['conf.hdfs.site'] do
   source 'hdfs-site.xml.erb'
   mode "644"
@@ -44,7 +54,8 @@ template node['hadoop']['conf.hdfs.site'] do
   group node['hadoop']['group']
 
   variables(
-    :replication => node['hadoop']['replication']
+    :replication => node['hadoop']['replication'],
+    :secondary_http_address => secondary_http
   )
 end
 
