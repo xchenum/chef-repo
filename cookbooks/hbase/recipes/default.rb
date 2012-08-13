@@ -60,7 +60,7 @@ template node['hbase']['dir'] + "/conf/hbase-site.xml" do
   owner node['hbase']['user']
   group node['hbase']['group']
   variables(
-    :hbase_master_host => hd[0]['hostname'] + ":54310",
+    :hadoop_name_node => hd[0]['hostname'] + ":54310",
     :zookeeper_quorum => zk_server_str
   )
 end
