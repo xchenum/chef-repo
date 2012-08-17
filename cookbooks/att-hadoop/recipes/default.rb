@@ -16,6 +16,9 @@ if node.chef_environment.include?("caas") then
 end
 
 if node['roles'].include?("hd-master") then
+
+  include_recipe "ssh-client"
+
   ips = []
   search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
     ips.push( n["network"]["ipaddress_eth0"] || n["network"]["ipaddress_eth1"] || n['network']['ipaddress_eth2'])
@@ -59,6 +62,13 @@ if node['roles'].include?("hd-master") then
     variables(
       :hosts => ips
     )
+  end
+
+  directory "/home/" + node['hadoop']['user'] + "/.ssh" do
+    user node['hadoop']['user']
+    group node['hadoop']['group']
+    mode "755"
+    action :create
   end
 
   template "/home/" + node['hadoop']['user'] + "/.ssh/config" do

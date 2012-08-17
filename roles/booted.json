@@ -1,0 +1,22 @@
+{
+  "name": "booted",
+  "env_run_lists": {
+  },
+  "run_list": [
+    "recipe[chef-client-cron]",
+    "recipe[ohai]",
+    "recipe[ntp]",
+    "recipe[ulimit]"
+  ],
+  "default_attributes": {
+    "chef-client-cron": {
+      "hour": "*",
+      "minute": "0,20,40"
+    }
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "description": "",
+  "json_class": "Chef::Role"
+}
