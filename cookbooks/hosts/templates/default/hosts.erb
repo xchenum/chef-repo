@@ -1,0 +1,6 @@
+
+<% @hosts.each do |host| %>
+<%= host['network']["ipaddress_eth0"] || host['network']["ipaddress_eth1"] %> <%= host['hostname'] %>
+<% end %>
+
+# 127.0.0.1 <%= @host_name %> localhost
