@@ -16,10 +16,10 @@ if node.chef_environment.include?("caas") then
 end
 
 def get_ip(n)
-  if node['network']
-    return node['network']['ipaddress_eth0'] ||
-           node['network']['ipaddress_eth1'] ||
-           node['network']['ipaddress_eth2']
+  if n['network']
+    return n['network']['ipaddress_eth0'] ||
+           n['network']['ipaddress_eth1'] ||
+           n['network']['ipaddress_eth2']
   else
     return nil
   end
