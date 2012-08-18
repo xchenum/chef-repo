@@ -1,4 +1,5 @@
 default['hadoop']['tmp.dir'] = ::File.join ::File::SEPARATOR, "mnt", "hadoop", "tmp"
+default['hadoop']['conf.dir'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf"
 default['hadoop']['conf.core.site'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf", "core-site.xml"
 default['hadoop']['conf.hadoop.site'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf", "hadoop-site.xml"
 default['hadoop']['conf.hdfs.site'] = ::File.join ::File::SEPARATOR, "usr", "local", "hadoop", "conf", "hdfs-site.xml"

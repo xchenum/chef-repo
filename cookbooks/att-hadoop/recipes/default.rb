@@ -121,4 +121,14 @@ mount node['hadoop']['ramdisk'] do
   end
 end
 
+if node['hadoop']['ganglia'] 
+  template node['hadoop']['conf.dir'] + "/hadoop-metrics.properties" do
+    source "hadoop-metrics.erb"
+    user node['hadoop']['user']
+    group node['hadoop']['group']
 
+    variables(
+      :ganglia_ip => node['hadoop']['ganglia']
+    )
+  end
+end
