@@ -15,13 +15,23 @@ if node.chef_environment.include?("caas") then
   include_recipe "hosts"
 end
 
+def get_ip(n)
+  if node['network']
+    return node['network']['ipaddress_eth0'] ||
+           node['network']['ipaddress_eth1'] ||
+           node['network']['ipaddress_eth2']
+  else
+    return nil
+  end
+end                                 
+
 if node['roles'].include?("hd-master") then
 
   include_recipe "ssh-client"
 
   ips = []
   search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
-    ips.push( n["network"]["ipaddress_eth0"] || n["network"]["ipaddress_eth1"] || n['network']['ipaddress_eth2'])
+    ips.push( get_ip(n) )
   end
   ips = ips.sort()
   
@@ -34,11 +44,11 @@ if node['roles'].include?("hd-master") then
 
   secondary = []
   search(:node, "chef_environment:#{node.chef_environment} AND role:hd-secondary").each() do |n|
-    secondary.push( n["network"]["ipaddress_eth0"] ) 
+    secondary.push( get_ip(n) ) 
   end
 
   if secondary.length == 0 then
-    secondary.push( node["network"]["ipaddress_eth0"] || node["network"]["ipaddress_eth1"] )
+    secondary.push( get_ip(node) )
   end
 
 
