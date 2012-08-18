@@ -21,7 +21,13 @@ clientPort=2181
 # The second one is used for leader election
 <% id = 1 %>
 <% @servers.each do |server| %>
+<%   if server == node or not node['zk-server']['use-public'] %>
 server.<%= id %>=<%= server['network']['ipaddress_eth0'] %>:2888:3888
+<%   else %>
+<%     if server.openstack and server.openstack.public_ipaddress and server.openstack.public_ipaddress != "" %>
+server.<%= id %>=<%= server.openstack.public_ipaddress %>:2888:3888
+<%     end %>
+<%   end %>
 <% id = id + 1 %>
 <% end %>
 
