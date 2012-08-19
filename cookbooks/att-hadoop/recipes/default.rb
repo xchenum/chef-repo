@@ -122,8 +122,8 @@ mount node['hadoop']['ramdisk'] do
 end
 
 if node['hadoop']['ganglia'] 
-  template node['hadoop']['conf.dir'] + "/hadoop-metrics.properties" do
-    source "hadoop-metrics.erb"
+  template node['hadoop']['conf.dir'] + "/hadoop-metrics2.properties" do
+    source "hadoop-metrics2.erb"
     user node['hadoop']['user']
     group node['hadoop']['group']
 
