@@ -131,4 +131,38 @@ if node['hadoop']['ganglia']
       :ganglia_ip => node['hadoop']['ganglia']
     )
   end
+
+  script "install gmond if needed" do
+    interpreter "bash"
+    user "root"
+    code <<-EOH
+      which gmond
+      RETVAL=$?
+      if [ $RETVAL -eq 1 ]; then
+rpm -ivh \
+http://dlutzy-pub.s3-website-us-west-1.amazonaws.com/ganglia-gmond-3.2.0-1.x86_64.rpm \
+http://dlutzy-pub.s3-website-us-west-1.amazonaws.com/libganglia-3.2.0-1.x86_64.rpm \
+http://dlutzy-pub.s3-website-us-west-1.amazonaws.com/libconfuse-2.6-3.el6.x86_64.rpm
+      fi
+    EOH
+  end
+
+  service "gmond" do
+    supports :restart => true
+
+    action [ :nothing ]
+  end
+
+
+  template node['hadoop']['gmond-conf'] do
+    source "gmond.conf.erb"
+    user "root"
+    group "root"
+    mode "644"
+    variables(
+      :host => node['hadoop']['ganglia']
+    )
+    
+    notifies :restart, resources(:service => "gmond")
+  end
 end
