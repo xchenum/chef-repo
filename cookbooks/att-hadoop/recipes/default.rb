@@ -16,6 +16,9 @@ if node.chef_environment.include?("caas") then
 end
 
 if node['roles'].include?("hd-master") then
+
+  include_recipe "ssh-client"
+
   ips = []
   search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
     ips.push( n["network"]["ipaddress_eth0"] || n["network"]["ipaddress_eth1"] || n['network']['ipaddress_eth2'])

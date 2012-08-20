@@ -1,5 +1,13 @@
 
 client = node['chef-client-cron']['bin']
+if node['platform'] == "centos"
+  client = node['chef-client-cron']['centos-bin']
+elsif node['platform'] == "ubuntu"
+  client = node['chef-client-cron']['ubuntu-bin']
+end
+
+
+
 output = node['chef-client-cron']['output']
 
 cron "chef-client" do

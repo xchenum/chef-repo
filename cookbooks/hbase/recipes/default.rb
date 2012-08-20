@@ -44,6 +44,10 @@ script "install hbase" do
   not_if "test -d /usr/local/hbase"
 end
 
+package "liblz2-dev" do
+  action :upgrade
+end
+
 
 # Get the zookeeper nodes
 zk_servers = []
