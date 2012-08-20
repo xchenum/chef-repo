@@ -1,0 +1,15 @@
+{
+  "run_list": [
+    "recipe[att-hadoop]"
+  ],
+  "description": "",
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "default_attributes": {
+  },
+  "json_class": "Chef::Role",
+  "name": "hd-slave",
+  "env_run_lists": {
+  }
+}

@@ -10,11 +10,21 @@
 #   end
 # end
 
+def get_ip(n)
+  if n['network']
+    return n['network']['ipaddress_eth0'] ||
+           n['network']['ipaddress_eth1'] ||
+           n['network']['ipaddress_eth2']
+  else
+    return nil
+  end
+end
+
 def get_comp_ip(comp)
   nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
   if (nodes.length != 0) then
     # return nodes[0]["network"]["interfaces"]["eth0"]["addresses"].select { |address, data| data["family"] == "inet" }[0][0]
-    return nodes[0]["network"]["ipaddress_eth0"] || nodes[0]["network"]["ipaddress_eth1"]
+    return get_ip(nodes[0])
   end
   return "127.0.0.1"
 end

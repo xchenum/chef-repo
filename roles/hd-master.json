@@ -1,0 +1,15 @@
+{
+  "name": "hd-master",
+  "chef_type": "role",
+  "default_attributes": {
+  },
+  "json_class": "Chef::Role",
+  "override_attributes": {
+  },
+  "run_list": [
+    "recipe[att-hadoop]"
+  ],
+  "env_run_lists": {
+  },
+  "description": ""
+}
