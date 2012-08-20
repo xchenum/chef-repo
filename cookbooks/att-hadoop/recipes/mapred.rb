@@ -53,8 +53,8 @@ template node['hadoop']['conf.mapred.site'] do
     :master => master,
     :map_tasks => map_tasks,
     :reduce_tasks => reduce_tasks,
-    :map_per_node => node['cpu']['total'] * 2,
-    :reduce_per_node => node['cpu']['total'] / 2 + 1,
+    :map_per_node => node['cpu']['total'],
+    :reduce_per_node => node['cpu']['total'] / 2,
     :compression => node['hadoop']['compression']
   )
 end
