@@ -15,7 +15,13 @@ directory tmp_dir  do
   recursive true
 end
 
+all_nodes = search(:node, "chef_environment:#{node.chef_environment}")
+
 def get_ip(n)
+  if not n
+    return nil
+  end
+
   if n['network']
     return n['network']['ipaddress_eth0'] ||
            n['network']['ipaddress_eth1'] ||
@@ -25,15 +31,17 @@ def get_ip(n)
   end
 end
 
-def get_comp_ip(comp)
-  nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
-  if (nodes.length != 0) then
-    return get_ip(nodes[0])
+def get_nodes(nodes, comp)
+  res = []
+  nodes.each() do |n|
+    if n['roles'] and n['roles'].include?(comp)
+      res.push(n)
+    end
   end
-  return "127.0.0.1"
+  return res
 end
 
-master = get_comp_ip("hd-master")
+master = get_ip( get_nodes(all_nodes, "hd-master")[0] )
 
 template node['hadoop']['conf.core.site'] do
   source 'core-site.xml.erb'
@@ -48,7 +56,7 @@ template node['hadoop']['conf.core.site'] do
 end
 
 secondary = []
-search(:node, "chef_environment:#{node.chef_environment} AND role:hd-secondary").each() do |n|
+get_nodes(all_nodes, "hd-secondary").each() do |n|
   secondary.push( get_ip(n) )
 end
 

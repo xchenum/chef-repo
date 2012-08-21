@@ -20,28 +20,38 @@ def get_ip(n)
   end
 end
 
-def get_comp_ip(comp)
-  nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
-  if (nodes.length != 0) then
-    # return nodes[0]["network"]["interfaces"]["eth0"]["addresses"].select { |address, data| data["family"] == "inet" }[0][0]
-    return get_ip(nodes[0])
-  end
-  return "127.0.0.1"
-end
+all_nodes = search(:node, "chef_environment:#{node.chef_environment}")
 
-def count_cpu(comp)
-  res = 0
-  nodes = search(:node, "chef_environment:#{node.chef_environment} AND role:" + comp) 
-  nodes.each do |n|
-    res = res + n['cpu']['total']
+def get_nodes(nodes, comp)
+  res = []
+  nodes.each() do |n|
+    if n["roles"] and n["roles"].include?(comp)
+      res.push(n)
+    end
   end
-  res = res + node['cpu']['total']
   return res
 end
 
-master = get_comp_ip("hd-master")
-map_tasks = (search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").length + 1) * 10
-reduce_tasks = (count_cpu("hd-slave") * 1.2).to_i
+def get_comp_ip(nodes, comp)
+  res = get_nodes(nodes, comp)
+  if (res.length != 0) then
+    return get_ip(res[0])
+  end
+  return nil
+end
+
+
+def count_cpu(nodes, comp)
+  res = 0
+  get_nodes(nodes, comp).each() do |n|
+    res = res + n['cpu']['total']
+  end
+  return res
+end
+
+master = get_comp_ip(all_nodes, "hd-master")
+map_tasks = get_nodes(all_nodes, "hd-slave").length * 10
+reduce_tasks = count_cpu(all_nodes, "hd-slave") 
 
 template node['hadoop']['conf.mapred.site'] do
   source 'mapred-site.xml.erb'

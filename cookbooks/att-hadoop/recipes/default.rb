@@ -11,10 +11,6 @@
 include_recipe "att-hadoop::hdfs"
 include_recipe "att-hadoop::mapred"
 
-if node.chef_environment.include?("caas") then
-  include_recipe "att-hadoop::hosts-caas"
-end
-
 def get_ip(n)
   if n['network']
     return n['network']['ipaddress_eth0'] ||
@@ -23,32 +19,51 @@ def get_ip(n)
   else
     return nil
   end
-end                                 
+end
+
+def get_ips(nodes, role)
+  res = []
+  nodes.each() do |n|
+    if n['roles'] and n['roles'].include?(role)
+      res.push( get_ip(n) )
+    end
+  end
+  return res
+end
+
+all_nodes = search(:node, "chef_environment:#{node.chef_environment}")
+
+if node.chef_environment.include?("caas") then
+  template "/etc/hosts" do
+    source "system-hosts.erb"
+    mode "644"
+
+    variables(
+      :host_name => node['hostname'],
+      :hosts => all_nodes
+    )
+  end
+end
 
 if node['roles'].include?("hd-master") then
 
   include_recipe "att-hadoop::ssh-client"
 
-  ips = []
-  search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
-    ips.push( get_ip(n) )
-  end
-  ips = ips.sort()
+  slave_ips = get_ips(all_nodes, "hd-slave")
+  slave_ips = slave_ips.sort()
   
   if node['hadoop']['cluster_size'] then
-      # limit the size of the cluster
-    if ips.length >= node['hadoop']['cluster_size']-1 then
-      ips = ips[0 ... node['hadoop']['cluster_size']-1]
+    # limit the size of the cluster
+    if slave_ips.length >= node['hadoop']['cluster_size']-1 then
+      slave_ips = slave_ips[0 ... node['hadoop']['cluster_size']-1]
     end
   end
 
-  secondary = []
-  search(:node, "chef_environment:#{node.chef_environment} AND role:hd-secondary").each() do |n|
-    secondary.push( get_ip(n) ) 
-  end
-
-  if secondary.length == 0 then
-    secondary.push( get_ip(node) )
+  secondary_ips = get_ips(all_nodes, "hd-secondary")
+  
+  if secondary_ips.length == 0 then
+    # no secondary namenode specified, use the primary namenode
+    secondary_ips.push( get_ip(node) )
   end
 
 
@@ -59,7 +74,7 @@ if node['roles'].include?("hd-master") then
     group node['hadoop']['group']
 
     variables(
-      :hosts => secondary
+      :hosts => secondary_ips
     )
   end
 
@@ -70,7 +85,7 @@ if node['roles'].include?("hd-master") then
     group node['hadoop']['group']
 
     variables(
-      :hosts => ips
+      :hosts => slave_ips
     )
   end
 
@@ -97,7 +112,7 @@ if node['roles'].include?("hd-secondary") then
     group node['hadoop']['group']
 
     variables(
-      :namenode_addr => search(:node, "chef_environment:#{node.chef_environment} AND role:hd-master")[0]['network']['ipaddress_eth0']
+      :namenode_addr => get_ips(all_nodes, "hd-master")[0]
     )
   end
 end
