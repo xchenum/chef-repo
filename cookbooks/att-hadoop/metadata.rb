@@ -4,5 +4,3 @@ license          "All rights reserved"
 description      "Installs/Configures att-hadoop"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.1"
-depends "hosts"
-depends "ssh-client"
