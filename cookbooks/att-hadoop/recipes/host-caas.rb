@@ -10,7 +10,7 @@
 nodes = search(:node, "chef_environment:#{node.chef_environment}")
 
 template "/etc/hosts" do
-  source "hosts.erb"
+  source "system-hosts.erb"
   mode "644"
 
   variables(

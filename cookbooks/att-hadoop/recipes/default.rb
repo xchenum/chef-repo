@@ -12,7 +12,7 @@ include_recipe "att-hadoop::hdfs"
 include_recipe "att-hadoop::mapred"
 
 if node.chef_environment.include?("caas") then
-  include_recipe "hosts"
+  include_recipe "att-hadoop::hosts-caas"
 end
 
 def get_ip(n)
@@ -27,7 +27,7 @@ end
 
 if node['roles'].include?("hd-master") then
 
-  include_recipe "ssh-client"
+  include_recipe "att-hadoop::ssh-client"
 
   ips = []
   search(:node, "chef_environment:#{node.chef_environment} AND role:hd-slave").each() do |n|
