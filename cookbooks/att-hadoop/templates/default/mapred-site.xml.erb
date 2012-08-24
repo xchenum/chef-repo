@@ -27,9 +27,7 @@
   </property>
   <property>
     <name>io.compression.codecs</name>
-    <value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,
-      org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec
-    </value>
+    <value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec</value>
   </property>
   <property>
     <name>mapred.compress.map.output</name>
@@ -68,5 +66,25 @@
   <property>
     <name>mapred.child.java.opts</name>
     <value>-Xmx2048m</value>
+  </property>
+  <property>
+    <name>mapred.map.tasks.speculative.execution</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>mapred.reduce.tasks.speculative.execution</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>io.sort.record.percent</name>
+    <value>0.1379</value>
+  </property>
+  <property>
+    <name>io.sort.spill.percent</name>
+    <value>0.98</value>
+  </property>
+  <property>
+    <name>io.sort.mb</name>
+    <value>1000</value>
   </property>
 </configuration>

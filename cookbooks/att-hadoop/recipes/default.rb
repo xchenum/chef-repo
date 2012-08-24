@@ -128,7 +128,7 @@ mount node['hadoop']['ramdisk'] do
   pass 0
   fstype "tmpfs"
   device "/dev/null"
-  options "nr_inodes=999k,mode=755,size=20480m"
+  options "nr_inodes=999k,mode=755,size=10240m"
   if node['hadoop']['useram']
     action [:mount, :enable]
   else

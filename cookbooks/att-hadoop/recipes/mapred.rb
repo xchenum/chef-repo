@@ -61,7 +61,9 @@ template node['hadoop']['conf.mapred.site'] do
 
   variables(
     :master => master,
-    :map_tasks => map_tasks,
+    #:map_tasks => map_tasks,
+    :map_tasks => reduce_tasks,
+    #:reduce_tasks => reduce_tasks,
     :reduce_tasks => reduce_tasks,
     :map_per_node => node['cpu']['total'],
     :reduce_per_node => node['cpu']['total'] / 2,
