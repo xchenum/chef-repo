@@ -49,7 +49,7 @@
   </property>
   <property>
     <name>mapred.reduce.parallel.copies</name>
-    <value>20</value>
+    <value>10</value>
   </property>
   <property>
     <name>mapred.job.tracker.handler.count</name>
@@ -57,7 +57,7 @@
   </property>
   <property>
     <name>mapred.job.reuse.jvm.num.tasks</name>
-    <value>10</value>
+    <value>1</value>
   </property>
   <property>
     <name>mapred.reduce.tasksperslot</name>
@@ -65,15 +65,15 @@
   </property>
   <property>
     <name>mapred.child.java.opts</name>
-    <value>-Xmx2048m</value>
+    <value>-Xmx<%= @mapred_ram %></value>
   </property>
   <property>
     <name>mapred.map.tasks.speculative.execution</name>
-    <value>false</value>
+    <value><%= @map_speculative %></value>
   </property>
   <property>
     <name>mapred.reduce.tasks.speculative.execution</name>
-    <value>false</value>
+    <value><%= @reduce_speculative %></value>
   </property>
   <property>
     <name>io.sort.record.percent</name>
@@ -85,6 +85,15 @@
   </property>
   <property>
     <name>io.sort.mb</name>
-    <value>1000</value>
+    <value><%= @io_sort_mb %></value>
   </property>
+  <property> 
+    <name>io.sort.factor</name> 
+    <value>100</value> 
+  </property>
+  <property> 
+    <name>mapred.task.timeout</name> 
+    <value><%= @mapred_task_timeout %></value> 
+  </property>
+
 </configuration>

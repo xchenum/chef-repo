@@ -65,9 +65,14 @@ template node['hadoop']['conf.mapred.site'] do
     :map_tasks => reduce_tasks,
     #:reduce_tasks => reduce_tasks,
     :reduce_tasks => reduce_tasks,
-    :map_per_node => node['cpu']['total'],
-    :reduce_per_node => node['cpu']['total'] / 2,
-    :compression => node['hadoop']['compression']
+    :map_per_node => node['hadoop']['map.per.node'] || node['cpu']['total'],
+    :reduce_per_node => node['hadoop']['reduce.per.node'] || node['cpu']['total'],
+    :compression => node['hadoop']['compression'],
+    :map_speculative => node['hadoop']['map.speculative'],
+    :reduce_speculative => node['hadoop']['reduce.speculative'],
+    :mapred_ram => node['hadoop']['mapred.ram'],
+    :mapred_task_timeout => node['hadoop']['mapred.task.timeout'],
+    :io_sort_mb => node['hadoop']['io.sort.mb']
   )
 end
 

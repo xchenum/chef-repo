@@ -1,0 +1,5 @@
+# /etc/security/limits.conf
+# managed by chef
+
+@<%= @grp %>    -       nofile  32768
+@<%= @grp %>    -       nproc 32000

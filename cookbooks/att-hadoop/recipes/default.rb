@@ -10,6 +10,7 @@
 
 include_recipe "att-hadoop::hdfs"
 include_recipe "att-hadoop::mapred"
+include_recipe "att-hadoop::ulimit"
 
 def get_ip(n)
   if n['network']
@@ -124,11 +125,13 @@ directory node['hadoop']['ramdisk'] do
   action :create
 end
 
+ramdisk_option = "nr_inodes=999k,mode=755,size="+node['hadoop']['ramdisk.size']
+
 mount node['hadoop']['ramdisk'] do
   pass 0
   fstype "tmpfs"
   device "/dev/null"
-  options "nr_inodes=999k,mode=755,size=10240m"
+  options ramdisk_option
   if node['hadoop']['useram']
     action [:mount, :enable]
   else

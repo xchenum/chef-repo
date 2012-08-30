@@ -2,7 +2,7 @@
 
 <% @hosts.each do |host| %>
 <% if host['network'] and host['hostname'] %>
-<%= host['network']["ipaddress_eth0"] || host['network']["ipaddress_eth1"] %> <%= host['hostname'] %>
+<%= host['network']["ipaddress_eth0"] || host['network']["ipaddress_eth1"] || host['network']["ipaddress_eth2"] %> <%= host['hostname'] %>
 <% end %>
 <% end %>
 
